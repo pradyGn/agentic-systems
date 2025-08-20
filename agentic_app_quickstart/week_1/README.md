@@ -1,4 +1,4 @@
-# Dynamic AI Agentic Workflow for Data Analysis & XGBModeling
+# Dynamic AI Agentic Workflow for Data Analysis & XGBoost Modeling
 
 This project implements a sophisticated dual-agent system with short term memory designed for interactive data analysis. One agent dynamically generates new Python functions (tools) in response to user requests, while a second agent utilizes these tools to provide answers and insights from various datasets.
 
