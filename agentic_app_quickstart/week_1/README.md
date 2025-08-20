@@ -25,8 +25,6 @@ This is the primary user-facing agent. It leverages the full suite of available 
 -   It has access to both the pre-defined tools and any new tools created by the `PythonFunctionGenrationAgent`.
 -   It uses the context from the chat history to provide relevant and accurate answers.
 
-![Flowchart showing a user request going to the Toolmaker Agent, which writes a tool to a file. The Answerer Agent then uses this new tool to respond to the user.](https://i.imgur.com/your-image-url.png)
-
 ***
 
 ## 📂 Codebase Structure
