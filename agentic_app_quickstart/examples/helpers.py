@@ -27,7 +27,7 @@ def get_client():
 
 def get_model():
     model = OpenAIChatCompletionsModel(
-        model="gpt-4.1",
+        model="gpt-o3",
         openai_client=get_client(),
     )
 

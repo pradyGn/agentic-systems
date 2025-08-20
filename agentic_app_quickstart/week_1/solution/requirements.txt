@@ -1,4 +1,5 @@
-agents
+openai-agents
 pandas
 plotext
 scipy
+xgboost

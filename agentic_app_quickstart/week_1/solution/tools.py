@@ -12,7 +12,7 @@ def read_employee_data():
         pd.DataFrame: Employee data with columns: [name, department, salary, hire_date, performance_score].
     """
 
-    return pd.read_csv("/workspaces/agentic-app-quickstart/agentic_app_quickstart/week_1/solution/data/employee_data.csv")
+    return pd.read_csv("./data/employee_data.csv")
 
 @function_tool
 def read_sample_sale_data():
@@ -22,7 +22,7 @@ def read_sample_sale_data():
         pd.DataFrame: sample sale data with columns: [date, product, price, quantity, customer_state].
     """
 
-    return pd.read_csv("/workspaces/agentic-app-quickstart/agentic_app_quickstart/week_1/solution/data/sample_sales.csv")
+    return pd.read_csv("./data/sample_sales.csv")
 
 @function_tool
 def read_weather_data():
@@ -32,7 +32,7 @@ def read_weather_data():
         pd.DataFrame: weather data with columns: [date, temperature, humidity, precipitation, city].
     """
 
-    return pd.read_csv("/workspaces/agentic-app-quickstart/agentic_app_quickstart/week_1/solution/data/weather_data.csv")
+    return pd.read_csv("./data/weather_data.csv")
 
 @function_tool
 def write_to_file(content: str):
@@ -49,8 +49,5 @@ def write_to_file(content: str):
 from agents import function_tool
 
 {content}"""
-    with open("/workspaces/agentic-app-quickstart/agentic_app_quickstart/week_1/solution/generated_tools.py", 'w') as f:
-        # f.seek(0, os.SEEK_END)
-        # if f.tell() > 0:
-        #     f.write("\n")
+    with open("./generated_tools.py", 'w') as f:
         f.write(content)

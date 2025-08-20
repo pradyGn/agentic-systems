@@ -41,30 +41,30 @@ async def run_conversation_with_handoffs():
             print("Thank you for contacting us. Goodbye! 👋")
             break
 
-        try:
-            # Run the current agent
-            _ = await Runner.run(starting_agent=agents["function_generation"], input=f"{memory_str}\nUser Input: {user_input}")
+        # try:
+        # Run the current agent
+        _ = await Runner.run(starting_agent=agents["function_generation"], input=f"{memory_str}\nUser Input: {user_input}")
 
-            generated_tools = importlib.import_module("generated_tools")
-            generated_tools = importlib.reload(generated_tools)
-            func_str_lis = helpers.get_function_names("generated_tools.py")
-            func_lis = [getattr(generated_tools, f) for f in func_str_lis]
-            agents["repond"].tools = [read_employee_data, read_sample_sale_data, read_weather_data] + func_lis
+        generated_tools = importlib.import_module("generated_tools")
+        generated_tools = importlib.reload(generated_tools)
+        func_str_lis = helpers.get_function_names("generated_tools.py")
+        func_lis = [getattr(generated_tools, f) for f in func_str_lis]
+        agents["repond"].tools = [read_employee_data, read_sample_sale_data, read_weather_data] + func_lis
 
-            result = await Runner.run(starting_agent=agents["repond"], input=f"{memory_str}\nUser Input: {user_input}")
-            response = result.final_output
+        result = await Runner.run(starting_agent=agents["repond"], input=f"{memory_str}\nUser Input: {user_input}")
+        response = result.final_output
 
-            current_inp = f"User Input: {user_input}\n"
-            current_out = f"Agent Response: {response}\n"
-            current_chat = f"{current_inp}{current_out}"
-            memory.append(current_chat)
+        current_inp = f"User Input: {user_input}\n"
+        current_out = f"Agent Response: {response}\n"
+        current_chat = f"{current_inp}{current_out}"
+        memory.append(current_chat)
 
-            # Display the agent's response
-            print(f"Agent: {response}\n")
+        # Display the agent's response
+        print(f"Agent: {response}\n")
 
-        except Exception as e:
-            print(f"❌ An error occurred: {str(e)}")
-            print("Please try again.\n")
+        # except Exception as e:
+        #     print(f"❌ An error occurred: {str(e)}")
+        #     print("Please try again.\n")
 
 async def main():
     """

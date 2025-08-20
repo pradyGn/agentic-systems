@@ -1,8 +1,6 @@
-import asyncio
-from agents import Agent, Runner, set_tracing_disabled
+from agents import Agent, set_tracing_disabled
 from agentic_app_quickstart.examples.helpers import get_model
 from agentic_app_quickstart.week_1.solution.tools import read_employee_data, read_sample_sale_data, read_weather_data, write_to_file
-import agentic_app_quickstart.week_1.solution.generated_tools
 
 # Disable detailed logging for cleaner output
 set_tracing_disabled(True)

@@ -1,236 +1,107 @@
-# 🎯 Week 1 Assignment: CSV Data Analysis Agent
+# Dynamic AI Agentic Workflow for Data Analysis
 
-## 📋 Mission Overview
+This project implements a sophisticated dual-agent system with short term memory designed for interactive data analysis. One agent dynamically generates new Python functions (tools) in response to user requests, while a second agent utilizes these tools to provide answers and insights from various datasets.
 
-Welcome to your first hands-on agentic system challenge! You'll be building an AI-powered CSV data analyst that can answer natural language questions about datasets.
+***
 
-### 🎪 The Challenge
+## 💡 How It Works
 
-Your task is to create an intelligent system that can:
-- 📊 Load and analyze CSV files 
-- 🗣️ Understand natural language questions from users
-- 🔍 Extract insights and answer questions about the data
-- 💬 Communicate findings in a clear, human-friendly way
+The system operates on a two-agent pipeline, separating the tasks of tool creation and task execution. This creates a powerful workflow where the system can "learn" to perform new tasks on the fly.
 
-**Real-world scenario**: Imagine you're building a data analysis assistant for a small business owner who wants to understand their data but doesn't know SQL or Python!
+### The Toolmaker: `PythonFunctionGenrationAgent`
 
----
+This agent acts as a specialized Python code generator. When a user makes a request that requires a new data manipulation, analysis, or visualization function, this agent takes charge.
 
-## 🏗️ Architecture Choices
+-   It **does not** answer the user's question directly.
+-   Instead, it **writes a complete Python function** that can solve the request.
+-   It uses the `write_to_file` tool to save this new function into the `generated_tools.py` file.
+-   This process effectively expands the system's capabilities at runtime.
+-   It **does not** write a Python function if the user's request can be answered from memory.
 
-You have **two paths** to choose from:
+### The Answerer: `GenieAgent`
 
-### Path A: Single Agent Approach 🤖
-- One intelligent agent that handles everything
-- Simpler to implement and debug
-- Perfect for getting started quickly
+This is the primary user-facing agent. It leverages the full suite of available functions to answer a user's question.
 
-### Path B: Multi-Agent System 🤖🤖🤖
-- Specialized agents for different tasks
-- More complex but more powerful
-- **Bonus points available!** 🌟
+-   It has access to both the pre-defined tools and any new tools created by the `PythonFunctionGenrationAgent`.
+-   It uses the context from the chat history to provide relevant and accurate answers.
 
----
+![Flowchart showing a user request going to the Toolmaker Agent, which writes a tool to a file. The Answerer Agent then uses this new tool to respond to the user.](https://i.imgur.com/your-image-url.png)
 
-## 🧰 Required Features (Core Assignment)
+***
 
-### 1. **CSV File Loading** 📁
-Create a function that can load CSV files and make them accessible to your agent(s).
+## 📂 Codebase Structure
 
-### 2. **Function Calling Implementation** ⚙️
-Implement **at least 3 function tools** that your agent can use. Here are some starter ideas to get your creativity flowing:
+The project is organized into several key files that define the agents, their tools, and supporting logic.
 
-**Basic Statistics Functions:**
-- `calculate_column_average(column_name)` - Get the mean value of a numeric column
-- `count_rows_with_value(column_name, value)` - Count how many rows contain a specific value
-- `get_column_names()` - List all available columns in the dataset
+-   `custom_agents.py`: This is the core of the project, defining the instructions, models, and toolsets for the two main agents: `PythonFunctionGenrationAgent` and `GenieAgent`.
 
-**Think beyond the basics! 🚀**
-- What about finding the maximum/minimum values?
-- Calculating percentages or ratios?
-- Finding correlations between columns?
-- Detecting outliers or unusual patterns?
+-   `tools.py`: This file contains the initial set of functions exposed to the agents as tools. These include functions for reading data (`read_employee_data`, `read_sample_sale_data`, etc.) and the critical `write_to_file` function that allows the Toolmaker agent to create new tools. It automatically adds the necessary `@function_tool` decorator to any generated code.
 
-### 3. **Natural Language Interface** 🗣️
-Your system should handle questions like:
-- "What's the average price in the dataset?"
-- "How many customers are from California?"
-- "What are the column names in this file?"
-- "Show me the highest revenue month"
+-   `helpers.py`: A collection of utility functions that support the agents and tools. This includes functions for reading CSV files and programmatically manipulating Python code strings (e.g., `add_decorator`).
 
-### 4. **Error Handling** 🛡️
-Make your system robust:
-- Handle missing columns gracefully
-- Deal with non-numeric data appropriately  
-- Provide helpful error messages to users
+-   `generated_tools.py`: This file is **dynamically created and populated** by the `PythonFunctionGenrationAgent`. It stores all the new functions written by the agent, making them available for the `GenieAgent` to use in subsequent requests.
 
----
+-   `main.py`: The main entry point for the application. It contains the primary conversation loop that orchestrates the agents, handles user input, and manages the dynamic reloading of tools.
 
-## 🌟 Bonus Challenges (Extra Credit)
+***
 
-### 🥉 Bronze Level: Multi-Agent Architecture
-Instead of one agent doing everything, create specialized agents:
-- **Data Loader Agent**: Handles file operations and data preparation
-- **Analytics Agent**: Performs calculations and statistical analysis
-- **Communication Agent**: Formats responses in user-friendly language
+## ✨ Key Features
 
-**Teaching Moment**: Multi-agent systems mirror real-world teams where specialists collaborate!
+-   **Dynamic Tool Generation**: The system's primary strength is its ability to create new functions at runtime to solve novel problems without manual intervention.
+-   **Data-Driven**: Comes equipped with tools to read and process data from multiple CSV files, including employee, sales, and weather data.
+-   **Text-Based Plotting**: Can generate data visualizations directly in the terminal using the `plotext` library.
+-   **Modular Agent Architecture**: The separation of concerns between the "Toolmaker" and "Answerer" agents creates a clean, powerful, and extensible workflow.
 
-### 🥈 Silver Level: Short-Term Memory
-Implement conversation memory so your system can:
-- Remember previous questions and answers
-- Allow follow-up questions like "What about the median?" after asking about averages
-- Build context over multiple interactions
+***
 
-**Example conversation:**
-```
-User: "What's the average sales amount?"
-Agent: "The average sales amount is $1,247.50"
-User: "What about the median for the same column?"
-Agent: "The median sales amount is $1,100.25" ← Remembers we're talking about sales!
-```
+## 🚀 Prerequisites & Setup
 
-### 🥇 Gold Level: Advanced Analytics
-Choose one or more advanced features:
+Before running the application, you need to install the required Python libraries.
 
-**📈 Data Visualization**
-- Generate simple plots or charts
-- Create summary visualizations
-- Export charts as images
+1.  It's recommended to run this project in a container. Open this repository in VS Code, click "Reopen in Container" or use the command palette (Cmd+Shift+P) and select "Dev Containers: Reopen in Container".
 
-**🧠 Smart Data Insights**
-- Automatically detect interesting patterns
-- Suggest relevant questions users might want to ask
-- Provide data quality assessments
+2.  Install all the necessary dependencies from the `requirements.txt` file:
+    ```bash
+    uv pip install -r /workspaces/agentic-systems/agentic_app_quickstart/week_1/solution/requirements.txt
+    ```
 
-**🔄 Multiple File Handling**
-- Compare data across multiple CSV files
-- Join/merge datasets intelligently
-- Handle different file formats (JSON, Excel)
+***
 
-**🎯 Query Optimization**
-- Cache frequently requested calculations
-- Optimize performance for large datasets
-- Implement smart data sampling for huge files
+### How to Run
 
----
+Once you have installed the dependencies, start the application by running the main script from your terminal:
 
-## 🚀 Getting Started
+```bash
 
-### Step 1: Explore the Examples
-Before you start coding, study these example files:
-- `examples/code/01_hello_world.py` - Basic agent setup
-- `examples/code/02_function_calling.py` - How to add tools to agents  
-- `examples/code/03_simple_memory.py` - Implementing conversation memory
-- `examples/code/05_handoffs.py` - Multi-agent coordination
+cd agentic_app_quickstart/week_1/solution/
 
-### Step 2: Plan Your Architecture
-**Reflection Questions**
-- Will you use a single agent or multiple agents? Why?
-- What functions does your agent need to analyze CSV data?
-- How will you handle edge cases (empty files, missing columns)?
-- What makes a good user experience for data questions?
-
-### Step 3: Start Small, Think Big
-Begin with the simplest possible version:
-1. Load a CSV file ✅
-2. Create one basic function (like column average) ✅
-3. Make your agent use that function ✅
-4. Test with simple questions ✅
-5. **Then** expand with more features! 🚀
-
----
-
-## 📊 Sample Data
-
-We've provided some sample CSV files to test with:
-
-**`sample_sales.csv`** - E-commerce sales data
-- Columns: date, product, price, quantity, customer_state
-- Perfect for testing averages, counts, and filtering
-
-**`employee_data.csv`** - HR dataset  
-- Columns: name, department, salary, hire_date, performance_score
-- Great for grouping and statistical analysis
-
-**`weather_data.csv`** - Weather measurements
-- Columns: date, temperature, humidity, precipitation, city
-- Ideal for time-series and geographical analysis
-
----
-
-## 📝 Submission Requirements
-
-### Code Structure
-```
-week_1/
-├── README.md                    # This file
-├── solution/
-    ├── main.py                  # Your main application
-    ├── agent.py                 # Agent definitions
-    ├── tools.py                 # Function tool implementations  
-    └── data/
-        ├── sample_sales.csv
-        ├── employee_data.csv
-        └── weather_data.csv
+python main.py
 
 ```
 
-### Documentation Nice-to-haves
-1. **README.md** in your solution folder explaining:
-   - Your architecture choice and reasoning
-   - How to run your system
-   - Example questions users can ask
-   - Challenges you overcame
+This will launch the interactive chat session. You can ask questions that require the agent to generate new functions for analysis or plotting.
 
-2. **Code Comments**: Follow the style from the examples with clear explanations
+Example Prompts:
 
-3. **Demo**: Post a short video or some screenshots in #week1 channel on Slack
+-   Give me some interesting insights.
 
----
+-   Give me some intersting co-relations.
 
-## 🎯 Assessment Criteria
+-   What is the highest salary in the Engineering department?
 
-| Criteria | Weight | What We're Looking For |
-|----------|--------|----------------------|
-| **Functionality** | 40% | Does your system work as described? Can it answer basic questions about CSV data? |
-| **Code Quality** | 25% | Clean, well-commented code following examples' style |  
-| **User Experience** | 20% | How intuitive and helpful is your system for non-technical users? |
-| **Creativity** | 15% | What unique features or approaches did you implement? |
+    -   (Follow-up question suggestion) Whats this person's salary?
 
-**Bonus points are added on top of the base score!**
+-   Show me the total sales quantity per product.
 
----
+-   Plot the Salaries vs Department.
 
-## 💡 Learning Objectives
+-   Is there a co-relation between weather and sales?
 
-By completing this assignment, you will:
-- ✅ Understand how to create practical AI agents for real-world tasks
-- ✅ Master function calling to extend agent capabilities  
-- ✅ Experience the trade-offs between single vs multi-agent architectures
-- ✅ Learn to handle user input gracefully and provide good error messages
-- ✅ Practice translating business requirements into technical solutions
+-   Which employee has the highest performance score?
 
----
+    -   (Follow-up question suggestion) Whats this person's salary?
 
-## 🤝 Getting Help
-
-**Stuck? Here's your support system:**
-
-1. **Start with the examples** - They contain 90% of what you need to know!
-2. **Office hours** - Every Tuesday, 7 PM GMT+2
-3. **#help channel** - Help your classmates and get help back
-4. **Documentation** - Check the [openai-agents](https://openai.github.io/openai-agents-python/) package docs
-
-**Remember**: The goal isn't to build the perfect system on the first try. It's to learn by doing, make mistakes, and iterate! 🔄
+-   (My Favourite): Train a simple xgboost model on salary prediction based on department, hire date and performance score. Tell me salary of individual with the following feature -  Marketing, 2022-05-08, 3.0
 
 
----
-
-## 📅 Important Dates
-
-- **Assignment Release**: August 10, 2025
-- **Submission Deadline**: August 18, 2025, 11:59 PM
-- **Peer Review**: August 22, 2025 (optional but encouraged!)
-
----
+You can end the conversation at any time by typing `quit` or `exit`.
